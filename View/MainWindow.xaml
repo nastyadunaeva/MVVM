@@ -5,12 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1000" Closed="Window_Closed">
+        Title="MainWindow" Height="700" Width="1000" >
     <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Open" 
-                        Executed="CommandBinding_Executed_Open"/>
-        <CommandBinding Command="ApplicationCommands.Save"
-                        CanExecute="CommandBinding_CanExecute_Save" Executed="CommandBinding_Executed_Save"/>
         <CommandBinding Command="ApplicationCommands.Delete"
                         CanExecute="CommandBinding_CanExecute_Delete" Executed="CommandBinding_Executed_Delete"/>
         <CommandBinding Command="{x:Static local:MainWindow.AddCommand}"
@@ -32,15 +28,15 @@
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,264.6,0" >
             <Menu Height="25" VerticalAlignment="Top" Margin="0,0,-0.4,0" Grid.RowSpan="2" Grid.ColumnSpan="3">
                 <MenuItem Header="File" >
-                    <Button Name ="button_New" Content="New" Click="Button_New_Click" />
-                    <Button Name ="button_Open" Content="Open" Command="ApplicationCommands.Open" />
-                    <Button Name ="button_Save" Content="Save" Command="ApplicationCommands.Save"/>
+                    <Button Name ="button_New" Content="New" Command="{Binding NewCommand}" />
+                    <Button Name ="button_Open" Content="Open" Command="{Binding OpenCommand}" />
+                    <Button Name ="button_Save" Content="Save" Command="{Binding SaveCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <Button Content="Add Defaults" Click="Button_AddDefaults_Click" />
-                    <Button Content="Add Default V3DataCollection" Click="Button_AddDefaultCollection_Click" />
-                    <Button Content="Add Default V3DataOnGrid" Click="Button_AddDefaultGrid_Click" />
-                    <Button Content="Add Element from File" Click="Button_AddFromFile_Click" />
+                    <Button Content="Add Defaults" Command="{Binding AddDefaultsCommand}" />
+                    <Button Content="Add Default V3DataCollection" Command="{Binding AddCollectionCommand}" />
+                    <Button Content="Add Default V3DataOnGrid" Command="{Binding AddGridCommand}" />
+                    <Button Content="Add Element from File" Command="{Binding AddFromFileCommand}" />
                     <Button Content="Remove" Command="ApplicationCommands.Delete"/>
                 </MenuItem>
             </Menu>
@@ -103,8 +99,8 @@
             </Grid>
             <Grid Grid.Row="2" Margin="2">
                 <ToolBar>
-                    <Button x:Name="button_Open_Tool" Content="Open" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="ApplicationCommands.Open"></Button>
-                    <Button x:Name="button_Save_Tool" Content="Save" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="ApplicationCommands.Save"></Button>
+                    <Button x:Name="button_Open_Tool" Content="Open" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{Binding OpenCommand}"></Button>
+                    <Button x:Name="button_Save_Tool" Content="Save" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{Binding SaveCommand}"></Button>
                     <Button x:Name="button_AddItem_Tool" Content="AddItem" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{x:Static local:MainWindow.AddCommand}"></Button>
                     <Button x:Name="button_Remove_Tool" Content="Remove" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="ApplicationCommands.Delete"></Button>
                 </ToolBar>

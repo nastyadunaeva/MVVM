@@ -1,14 +1,97 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 using Model;
 
 namespace ViewModel
 {
+    public interface IUIServices
+    {
+        string SelectFileSave();
+        string SelectFile();
+    }
     public class MainViewModel : ViewModelBase
     {
         private V3MainCollection coll = new V3MainCollection();
         Item item = null;
+        public MainViewModel(IUIServices svc)
+        {
+            NewCommand = new RelayCommand(
+                _ => {
+                    if (this.HasUnsavedChanges())
+                    {
+                        string filename = svc.SelectFileSave();
+                        if (filename != "No filename")
+                        {
+                            this.Save(filename);
+                        }
+                    }
+                    this.RemoveAll();
+                }
+                );
+            AddDefaultsCommand = new RelayCommand(
+                _ =>
+                {
+                    this.AddDefaults();
+                }
+                );
+            AddCollectionCommand = new RelayCommand(
+                _ =>
+                {
+                    this.AddDefaultCollection();
+                }
+                );
+            AddGridCommand = new RelayCommand(
+                _ =>
+                {
+                    this.AddDefaultGrid();
+                }
+                );
+            AddFromFileCommand = new RelayCommand(
+                _ =>
+                {
+                    string filename = svc.SelectFile();
+                    if (filename != "Error")
+                    {
+                        this.AddGridFromFile(filename);
+                    }
+                }
+                );
+            OpenCommand = new RelayCommand(
+                _ =>
+                {
+                    string filename1 = svc.SelectFileSave();
+                    if (filename1 != "No filename")
+                    {
+                        this.Save(filename1);
+                    }
+                    string filename2 = svc.SelectFile();
+                    if (filename2 != "Error")
+                    {
+                        this.Load(filename2);
+                    }
+                }
+                );
+            SaveCommand = new RelayCommand(
+                _ =>
+                {
+                    string filename = svc.SelectFile();
+                    if (filename != "Error")
+                    {
+                        this.Save(filename);
+                    }
+                },
+                _ => this.CanExecute()
+                );
+        }
+        public ICommand NewCommand { get; private set; }
+        public ICommand AddDefaultsCommand { get; private set; }
+        public ICommand AddCollectionCommand { get; private set; }
+        public ICommand AddGridCommand { get; private set; }
+        public ICommand AddFromFileCommand { get; private set; }
+        public ICommand OpenCommand { get; private set; }
+        public ICommand SaveCommand { get; private set; }
         public V3MainCollection Coll
         {
             get => coll;
@@ -142,7 +225,7 @@ namespace ViewModel
         }
         public bool CanExecute()
         {
-            if ((Coll != null) && (Coll.Is_changed == true))
+            if (Coll != null)
             {
                 return true;
             }
