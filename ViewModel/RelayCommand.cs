@@ -9,17 +9,19 @@ namespace ViewModel
     {
         private readonly Action<object> execute;
         private readonly Func<object, bool> canExecute;
+        private readonly IUIServices svc;
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommand(IUIServices svc, Action<object> execute, Func<object, bool> canExecute = null)
         {
             this.execute = execute;
             this.canExecute = canExecute;
+            this.svc = svc;
         }
 
         public event EventHandler CanExecuteChanged
         {
-            add {/* CommandManager.RequerySuggested += value;*/ }
-            remove {/* CommandManager.RequerySuggested -= value; */}
+            add { svc.RequerySuggested += value;}
+            remove { svc.RequerySuggested -= value; }
         }
 
         public bool CanExecute(object parameter) => canExecute == null ? true : canExecute(parameter);

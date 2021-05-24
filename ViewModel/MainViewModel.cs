@@ -10,6 +10,7 @@ namespace ViewModel
     {
         string SelectFileSave();
         string SelectFile();
+        event EventHandler RequerySuggested;
     }
     public class MainViewModel : ViewModelBase
     {
@@ -17,7 +18,7 @@ namespace ViewModel
         Item item = null;
         public MainViewModel(IUIServices svc)
         {
-            NewCommand = new RelayCommand(
+            NewCommand = new RelayCommand(svc,
                 _ => {
                     if (this.HasUnsavedChanges())
                     {
@@ -30,25 +31,25 @@ namespace ViewModel
                     this.RemoveAll();
                 }
                 );
-            AddDefaultsCommand = new RelayCommand(
+            AddDefaultsCommand = new RelayCommand(svc,
                 _ =>
                 {
                     this.AddDefaults();
                 }
                 );
-            AddCollectionCommand = new RelayCommand(
+            AddCollectionCommand = new RelayCommand(svc,
                 _ =>
                 {
                     this.AddDefaultCollection();
                 }
                 );
-            AddGridCommand = new RelayCommand(
+            AddGridCommand = new RelayCommand(svc,
                 _ =>
                 {
                     this.AddDefaultGrid();
                 }
                 );
-            AddFromFileCommand = new RelayCommand(
+            AddFromFileCommand = new RelayCommand(svc,
                 _ =>
                 {
                     string filename = svc.SelectFile();
@@ -58,7 +59,7 @@ namespace ViewModel
                     }
                 }
                 );
-            OpenCommand = new RelayCommand(
+            OpenCommand = new RelayCommand(svc,
                 _ =>
                 {
                     string filename1 = svc.SelectFileSave();
@@ -73,7 +74,7 @@ namespace ViewModel
                     }
                 }
                 );
-            SaveCommand = new RelayCommand(
+            SaveCommand = new RelayCommand(svc,
                 _ =>
                 {
                     string filename = svc.SelectFile();
@@ -84,6 +85,19 @@ namespace ViewModel
                 },
                 _ => this.CanExecute()
                 );
+            RemoveCommand = new RelayCommand(svc,
+                _ =>
+                {
+                    this.RemoveAt(MainListSelectedIndex);
+                }, 
+                _ =>
+                {
+                    if (MainListSelectedIndex >= 0)
+                        return true;
+                    else
+                        return false;
+                }
+                );
         }
         public ICommand NewCommand { get; private set; }
         public ICommand AddDefaultsCommand { get; private set; }
@@ -92,6 +106,7 @@ namespace ViewModel
         public ICommand AddFromFileCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
+        public ICommand RemoveCommand { get; private set; }
         public V3MainCollection Coll
         {
             get => coll;
@@ -136,6 +151,26 @@ namespace ViewModel
         {
             get => Coll.Max_dist;
             
+        }
+        private int mainListSelectedIndex;
+        public int MainListSelectedIndex
+        {
+            get => mainListSelectedIndex;
+            set
+            {
+                mainListSelectedIndex = value;
+                RaisePropertyChanged("MainListSelectedIndex");
+            }
+        }
+        private V3DataCollection dataCollSelectedItem;
+        public V3DataCollection DataCollSelectedItem
+        {
+            get => dataCollSelectedItem;
+            set
+            {
+                dataCollSelectedItem = value;
+                RaisePropertyChanged("DataCollSelectedItem");
+            }
         }
 
         override public string ToString()
@@ -225,7 +260,7 @@ namespace ViewModel
         }
         public bool CanExecute()
         {
-            if (Coll != null)
+            if ((Coll != null) && (Coll.Is_changed == true))
             {
                 return true;
             }
