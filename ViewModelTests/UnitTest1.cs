@@ -57,6 +57,18 @@ namespace ViewModelTests
             model.OpenCommand.Execute(null);
             Assert.False(model.Coll.Is_changed);
         }
+        [Fact]
+        public void RemoveTest()
+        {
+            MainViewModel model = new MainViewModel(new TestUIServices("No filename", "Error"));
+            model.MainListSelectedIndex = -1;
+            Assert.False(model.RemoveCommand.CanExecute(null));
+            model.AddDefaults();
+            model.MainListSelectedIndex = 0;
+            Assert.True(model.RemoveCommand.CanExecute(null));
+            model.RemoveCommand.Execute(null);
+            Assert.Equal(3, model.Coll.Count);
+        }
     }
     public class TestUIServices : IUIServices
     {
@@ -71,5 +83,6 @@ namespace ViewModelTests
 
         public string SelectFileSave() => filenameSave;
         public string SelectFile() => filename;
+        public event EventHandler RequerySuggested;
     }
 }
