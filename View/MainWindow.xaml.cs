@@ -37,25 +37,6 @@ namespace View
         {
             model.UpdateInfoOnGrid((sender as ListBox).SelectedItem);
         }
-        
-        private void CommandBinding_CanExecute_Delete(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if ((lisBox_Main != null) && (lisBox_Main.Items.Contains(lisBox_Main.SelectedItem)))
-                e.CanExecute = true;
-            else
-                e.CanExecute = false;
-        }
-        private void CommandBinding_Executed_Delete(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                model.RemoveAt(lisBox_Main.SelectedIndex);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Сначала выберите элемент");
-            }
-        }
         private void CommandBinding_CanExecute_Add(object sender, CanExecuteRoutedEventArgs e)
         {
             if (model.ItemIsNull())
@@ -77,21 +58,15 @@ namespace View
             }
             else e.CanExecute = false;
         }
-        private void CommandBinding_Executed_Add(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                model.AddItem();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
+        private void CommandBinding_Executed_Add(object sender, ExecutedRoutedEventArgs e) => model.AddItem();
     }
     public class WPFUIServices : IUIServices
     {
+        public event EventHandler RequerySuggested
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
         public string SelectFileSave()
         {
             MessageBoxResult result = MessageBox.Show("Изменения будут потеряны. Сохранить изменения?", "", MessageBoxButton.YesNo);

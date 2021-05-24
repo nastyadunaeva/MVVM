@@ -7,8 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1000" >
     <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Delete"
-                        CanExecute="CommandBinding_CanExecute_Delete" Executed="CommandBinding_Executed_Delete"/>
         <CommandBinding Command="{x:Static local:MainWindow.AddCommand}"
                         CanExecute="CommandBinding_CanExecute_Add" Executed="CommandBinding_Executed_Add" />
     </Window.CommandBindings>
@@ -37,13 +35,13 @@
                     <Button Content="Add Default V3DataCollection" Command="{Binding AddCollectionCommand}" />
                     <Button Content="Add Default V3DataOnGrid" Command="{Binding AddGridCommand}" />
                     <Button Content="Add Element from File" Command="{Binding AddFromFileCommand}" />
-                    <Button Content="Remove" Command="ApplicationCommands.Delete"/>
+                    <Button Content="Remove" Command="{Binding RemoveCommand}"/>
                 </MenuItem>
             </Menu>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Margin="10,10,9.8,10.6">
-            <ListBox x:Name="lisBox_Main" ItemsSource="{Binding Coll}"></ListBox>
+            <ListBox x:Name="lisBox_Main" ItemsSource="{Binding Coll}" SelectedIndex="{Binding MainListSelectedIndex, Mode=OneWayToSource}"></ListBox>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Margin="10.2,10,9.6,10.6">
@@ -102,7 +100,7 @@
                     <Button x:Name="button_Open_Tool" Content="Open" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{Binding OpenCommand}"></Button>
                     <Button x:Name="button_Save_Tool" Content="Save" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{Binding SaveCommand}"></Button>
                     <Button x:Name="button_AddItem_Tool" Content="AddItem" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{x:Static local:MainWindow.AddCommand}"></Button>
-                    <Button x:Name="button_Remove_Tool" Content="Remove" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="ApplicationCommands.Delete"></Button>
+                    <Button x:Name="button_Remove_Tool" Content="Remove" Width="55" FontSize="12" VerticalContentAlignment="Top" Command="{Binding RemoveCommand}"></Button>
                 </ToolBar>
             </Grid>
         </Grid>
